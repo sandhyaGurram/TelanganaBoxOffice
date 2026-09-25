@@ -1,109 +1,104 @@
-const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+import https from "https";
 
-const tmdbHeaders = {
-    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-    accept: "application/json",
+const TMDB_HOST = "api.themoviedb.org";
+
+const tmdbRequest = (path) => {
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: TMDB_HOST,
+            path,
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+                accept: "application/json",
+            },
+        };
+
+        const request = https.request(options, (response) => {
+            let data = "";
+
+            response.on("data", (chunk) => {
+                data += chunk;
+            });
+
+            response.on("end", () => {
+                try {
+                    const parsedData = JSON.parse(data);
+
+                    if (response.statusCode >= 400) {
+                        console.error("TMDB ERROR:", response.statusCode);
+                        console.error(parsedData);
+
+                        return reject(
+                            new Error(
+                                parsedData.status_message ||
+                                `TMDB request failed: ${response.statusCode}`
+                            )
+                        );
+                    }
+
+                    resolve(parsedData);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        });
+
+        request.on("error", (error) => {
+            console.error("TMDB HTTPS ERROR:", error.message);
+            reject(error);
+        });
+
+        request.end();
+    });
 };
+
 
 export const searchMovies = async (query) => {
-    try {
-        const url = new URL(`${TMDB_BASE_URL}/search/movie`);
+    const params = new URLSearchParams({
+        query,
+        include_adult: "false",
+        language: "en-US",
+    });
 
-        url.searchParams.set("query", query);
-        url.searchParams.set("include_adult", "false");
-        url.searchParams.set("language", "en-US");
-
-        const response = await fetch(url, {
-            method: "GET",
-            headers: tmdbHeaders,
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("TMDB SEARCH ERROR");
-            console.error("Status:", response.status);
-            console.error("Response:", data);
-
-            throw new Error(
-                data.status_message || `TMDB request failed with ${response.status}`
-            );
-        }
-
-        return data;
-    } catch (error) {
-        console.error("TMDB API ERROR");
-        console.error("Message:", error.message);
-
-        throw error;
-    }
+    return await tmdbRequest(`/3/search/movie?${params.toString()}`);
 };
+
 
 export const getMovieDetails = async (movieId) => {
-    try {
-        const response = await fetch(
-            `${TMDB_BASE_URL}/movie/${movieId}?language=en-US`,
-            {
-                method: "GET",
-                headers: tmdbHeaders,
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("TMDB DETAILS ERROR");
-            console.error("Status:", response.status);
-            console.error("Response:", data);
-
-            throw new Error(
-                data.status_message || `TMDB request failed with ${response.status}`
-            );
-        }
-
-        return data;
-    } catch (error) {
-        console.error("TMDB DETAILS ERROR");
-        console.error("Message:", error.message);
-
-        throw error;
-    }
+    return await tmdbRequest(
+        `/3/movie/${movieId}?language=en-US`
+    );
 };
 
+
 export const getIndiaMovies = async () => {
-    try {
-        const url = new URL(`${TMDB_BASE_URL}/discover/movie`);
+    const params = new URLSearchParams({
+        language: "en-US",
+        region: "IN",
+        sort_by: "popularity.desc",
+        include_adult: "false",
+        page: "1",
+    });
 
-        url.searchParams.set("language", "en-US");
-        url.searchParams.set("region", "IN");
-        url.searchParams.set("sort_by", "popularity.desc");
-        url.searchParams.set("include_adult", "false");
-        url.searchParams.set("page", "1");
+    return await tmdbRequest(
+        `/3/discover/movie?${params.toString()}`
+    );
+};
 
-        const response = await fetch(url, {
-            method: "GET",
-            headers: tmdbHeaders,
-        });
+export const getTeluguMovies = async () => {
+    const params = new URLSearchParams({
+        language: "en-US",
+        region: "IN",
+        sort_by: "popularity.desc",
+        include_adult: "false",
+        with_original_language: "te",
+        page: "1",
+    });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error("TMDB DISCOVER ERROR");
-            console.error("Status:", response.status);
-            console.error("Response:", data);
-
-            throw new Error(
-                data.status_message || `TMDB request failed with ${response.status}`
-            );
-        }
-
-        return data;
-    } catch (error) {
-        console.error("TMDB DISCOVER ERROR");
-        console.error("Message:", error.message);
-
-        throw error;
-    }
+    return await tmdbRequest(
+        `/3/discover/movie?${params.toString()}`
+    );
 };
 
 
