@@ -1,0 +1,316 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Arial, sans-serif;
+  background: #0b0d12;
+  color: #f5f5f5;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  background:
+    radial-gradient(circle at top right, rgba(74, 58, 140, 0.18), transparent 35%),
+    #0b0d12;
+}
+
+/* Sidebar */
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  padding: 28px 18px;
+  border-right: 1px solid #20242e;
+  background: #0d1016;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 0 12px 35px;
+}
+
+.logo span {
+  color: #8d7cff;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nav-item {
+  border: 0;
+  background: transparent;
+  color: #8f96a3;
+  text-align: left;
+  padding: 13px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-item:hover {
+  background: #171b24;
+  color: white;
+}
+
+.nav-item.active {
+  background: #211d3b;
+  color: white;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 14px;
+  color: #d5d8df;
+}
+
+.sidebar-bottom small {
+  display: block;
+  margin-top: 5px;
+  color: #6f7683;
+}
+
+/* Main */
+
+.main-content {
+  flex: 1;
+  padding: 30px 36px;
+  max-width: 1600px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.topbar p {
+  margin: 7px 0 0;
+  color: #7f8794;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #aab1bd;
+  font-size: 14px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #32d583;
+}
+
+/* Filters */
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.filters select {
+  background: #131720;
+  border: 1px solid #292e39;
+  color: #d8dce4;
+  padding: 11px 14px;
+  border-radius: 8px;
+  min-width: 170px;
+  outline: none;
+}
+
+/* Stats */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: rgba(19, 23, 32, 0.85);
+  border: 1px solid #252a35;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat-card p {
+  margin: 0 0 12px;
+  color: #858d9a;
+  font-size: 14px;
+}
+
+.stat-card h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.stat-card span {
+  display: block;
+  margin-top: 8px;
+  color: #626a77;
+  font-size: 12px;
+}
+
+/* Panels */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+}
+
+.panel {
+  min-height: 300px;
+  background: rgba(19, 23, 32, 0.85);
+  border: 1px solid #252a35;
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.large-panel {
+  min-height: 400px;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.panel-header p {
+  margin: 6px 0 0;
+  color: #737b88;
+  font-size: 13px;
+}
+
+.empty-state {
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #737b88;
+  text-align: center;
+}
+
+.empty-state h4 {
+  margin: 0 0 8px;
+  color: #c9cdd5;
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.empty-state.small {
+  height: 220px;
+}
+
+/* Last updated */
+
+.last-updated {
+  margin-top: 18px;
+  color: #666e7b;
+  font-size: 12px;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .sidebar {
+    width: 190px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters select {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+.movie-list {
+  width: 100%;
+}
+
+.movies-table {
+  width: 100%;
+}
+
+.movie-row {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 0.8fr 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.movie-header {
+  color: #888;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.movie-row > span {
+  color: #cfcfcf;
+  font-size: 14px;
+}
+
+.movie-row .movie-title {
+  color: #fff;
+  font-weight: 600;
+}
