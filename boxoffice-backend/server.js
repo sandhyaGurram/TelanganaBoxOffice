@@ -6,6 +6,13 @@ import connectDB from "./config/db.js";
 
 dotenv.config();
 
+console.log(
+    "TMDB token loaded:",
+    Boolean(process.env.TMDB_ACCESS_TOKEN),
+    "length:",
+    process.env.TMDB_ACCESS_TOKEN?.length
+);
+
 connectDB();
 
 const app = express();
