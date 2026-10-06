@@ -113,6 +113,47 @@ export const getApifyMovieBoxOffice = async (movie) => {
 };
 
 
+export const getTelanganaBoxOffice = async (movie) => {
+    const items = await getApifyMovieBoxOffice(movie);
+
+    const telanganaItems = items.filter(
+        (item) =>
+            item.state?.toLowerCase() === "telangana"
+    );
+
+    const summary = {
+        total: telanganaItems.length,
+
+        rowTypes: {
+            SUMMARY: telanganaItems.filter(
+                item => item.row_type === "SUMMARY"
+            ).length,
+
+            CITY_BREAKDOWN: telanganaItems.filter(
+                item => item.row_type === "CITY_BREAKDOWN"
+            ).length,
+
+            SESSION: telanganaItems.filter(
+                item => item.row_type === "SESSION"
+            ).length,
+        },
+
+        cities: [
+            ...new Set(
+                telanganaItems
+                    .map(item => item.city)
+                    .filter(Boolean)
+            )
+        ],
+    };
+
+    return {
+        summary,
+        data: telanganaItems,
+    };
+};
+
+
 
 
 

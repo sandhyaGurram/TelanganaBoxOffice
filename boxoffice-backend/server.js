@@ -8,12 +8,7 @@ import { syncMoviesFromTMDB } from "./services/movieSyncService.js";
 
 dotenv.config();
 
-console.log(
-    "TMDB token loaded:",
-    Boolean(process.env.TMDB_ACCESS_TOKEN),
-    "length:",
-    process.env.TMDB_ACCESS_TOKEN?.length
-);
+
 
 
 const app = express();
@@ -27,6 +22,7 @@ app.use(express.json());
 app.use("/api/movies", movieRoutes);
 
 app.use("/api/box-office", boxOfficeRoutes);
+
 
 // Test route
 app.get("/", (req, res) => {
