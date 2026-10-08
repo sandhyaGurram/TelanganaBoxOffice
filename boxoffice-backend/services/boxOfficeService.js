@@ -73,7 +73,8 @@ export const getMovieBoxOffice = async (movie) => {
 // APIFY
 // ======================================================
 
-export const getApifyMovieBoxOffice = async (movie) => {
+
+export const getApifyMovieBoxOffice = async () => {
     try {
         if (!process.env.APIFY_API_TOKEN) {
             throw new Error("APIFY_API_TOKEN is missing in .env");
@@ -83,13 +84,18 @@ export const getApifyMovieBoxOffice = async (movie) => {
             token: process.env.APIFY_API_TOKEN,
         });
 
+        // IMPORTANT:
+        // Do NOT send movieTitles.
+        // The Actor will collect all movies for the selected date.
         const input = {
-            movieTitles: [movie],
             dates: ["today"],
         };
 
+        console.log("=================================");
         console.log("Starting Apify Actor...");
-        console.log("Movie:", movie);
+        console.log("Mode: ALL MOVIES");
+        console.log("Date: TODAY");
+        console.log("=================================");
 
         const run = await client
             .actor("monknwarriors/indian-boxoffice-tracker")
@@ -104,6 +110,20 @@ export const getApifyMovieBoxOffice = async (movie) => {
 
         console.log("Apify items received:", items.length);
 
+        // Check which movies were returned
+        const movieNames = [
+            ...new Set(
+                items
+                    .map((item) => item.movie_title)
+                    .filter(Boolean)
+            ),
+        ];
+
+        console.log("=================================");
+        console.log("MOVIES FOUND:", movieNames.length);
+        console.log(movieNames);
+        console.log("=================================");
+
         return items;
 
     } catch (error) {
@@ -111,41 +131,58 @@ export const getApifyMovieBoxOffice = async (movie) => {
         throw error;
     }
 };
+// export const getApifyMovieBoxOffice = async (movie) => {
+//     try {
+//         if (!process.env.APIFY_API_TOKEN) {
+//             throw new Error("APIFY_API_TOKEN is missing in .env");
+//         }
+
+//         const client = new ApifyClient({
+//             token: process.env.APIFY_API_TOKEN,
+//         });
+
+//         const input = {
+//             movieTitles: [movie],
+//             dates: ["today"],
+//         };
+
+//         console.log("Starting Apify Actor...");
+//         console.log("Movie:", movie);
+
+//         const run = await client
+//             .actor("monknwarriors/indian-boxoffice-tracker")
+//             .call(input);
+
+//         console.log("Apify run completed.");
+//         console.log("Dataset ID:", run.defaultDatasetId);
+
+//         const { items } = await client
+//             .dataset(run.defaultDatasetId)
+//             .listItems();
+
+//         console.log("Apify items received:", items.length);
+
+//         return items;
+
+//     } catch (error) {
+//         console.error("APIFY ERROR:", error.message);
+//         throw error;
+//     }
+// };
 
 
-export const getTelanganaBoxOffice = async (movie) => {
-    const items = await getApifyMovieBoxOffice(movie);
+
+
+
+
+
+export const getTelanganaBoxOffice = async () => {
+    const items = await getApifyMovieBoxOffice();
 
     const telanganaItems = items.filter(
         (item) =>
             item.state?.toLowerCase() === "telangana"
     );
-
-    const summary = {
-        total: telanganaItems.length,
-
-        rowTypes: {
-            SUMMARY: telanganaItems.filter(
-                item => item.row_type === "SUMMARY"
-            ).length,
-
-            CITY_BREAKDOWN: telanganaItems.filter(
-                item => item.row_type === "CITY_BREAKDOWN"
-            ).length,
-
-            SESSION: telanganaItems.filter(
-                item => item.row_type === "SESSION"
-            ).length,
-        },
-
-        cities: [
-            ...new Set(
-                telanganaItems
-                    .map(item => item.city)
-                    .filter(Boolean)
-            )
-        ],
-    };
 
     const movieNames = [
         ...new Set(
@@ -155,14 +192,103 @@ export const getTelanganaBoxOffice = async (movie) => {
         ),
     ];
 
-    console.log("TELANGANA MOVIES:");
-    console.log(movieNames);
+    const cities = [
+        ...new Set(
+            telanganaItems
+                .map((item) => item.city)
+                .filter(Boolean)
+        ),
+    ];
+
+    const summary = {
+        total: telanganaItems.length,
+
+        rowTypes: {
+            SUMMARY: telanganaItems.filter(
+                (item) => item.row_type === "SUMMARY"
+            ).length,
+
+            CITY_BREAKDOWN: telanganaItems.filter(
+                (item) => item.row_type === "CITY_BREAKDOWN"
+            ).length,
+
+            SESSION: telanganaItems.filter(
+                (item) => item.row_type === "SESSION"
+            ).length,
+        },
+
+        movies: movieNames,
+
+        movieCount: movieNames.length,
+
+        cities,
+
+        cityCount: cities.length,
+    };
+
+    console.log("=================================");
+    console.log("TELANGANA MOVIES:", movieNames);
+    console.log("MOVIE COUNT:", movieNames.length);
+    console.log("TELANGANA CITIES:", cities.length);
+    console.log("=================================");
 
     return {
         summary,
         data: telanganaItems,
     };
 };
+
+
+// export const getTelanganaBoxOffice = async (movie) => {
+//     const items = await getApifyMovieBoxOffice(movie);
+
+//     const telanganaItems = items.filter(
+//         (item) =>
+//             item.state?.toLowerCase() === "telangana"
+//     );
+
+//     const summary = {
+//         total: telanganaItems.length,
+
+//         rowTypes: {
+//             SUMMARY: telanganaItems.filter(
+//                 item => item.row_type === "SUMMARY"
+//             ).length,
+
+//             CITY_BREAKDOWN: telanganaItems.filter(
+//                 item => item.row_type === "CITY_BREAKDOWN"
+//             ).length,
+
+//             SESSION: telanganaItems.filter(
+//                 item => item.row_type === "SESSION"
+//             ).length,
+//         },
+
+//         cities: [
+//             ...new Set(
+//                 telanganaItems
+//                     .map(item => item.city)
+//                     .filter(Boolean)
+//             )
+//         ],
+//     };
+
+//     const movieNames = [
+//         ...new Set(
+//             telanganaItems
+//                 .map((item) => item.movie_title)
+//                 .filter(Boolean)
+//         ),
+//     ];
+
+//     console.log("TELANGANA MOVIES:");
+//     console.log(movieNames);
+
+//     return {
+//         summary,
+//         data: telanganaItems,
+//     };
+// };
 
 
 
