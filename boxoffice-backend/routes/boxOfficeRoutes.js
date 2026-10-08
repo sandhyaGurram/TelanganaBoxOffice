@@ -21,18 +21,39 @@ const router = express.Router();
 
 router.get("/test-apify", async (req, res) => {
     try {
-        const movie = req.query.movie || "The Paradise";
+        const data =
+            await getApifyMovieBoxOffice();
 
-        const data = await getApifyMovieBoxOffice(movie);
+        const movies = [
+            ...new Set(
+                data
+                    .map(
+                        (item) =>
+                            item.movie_title
+                    )
+                    .filter(Boolean)
+            ),
+        ];
 
         res.json({
             success: true,
-            movie,
-            count: data.length,
+
+            movieCount:
+                movies.length,
+
+            movies,
+
+            count:
+                data.length,
+
             data,
         });
+
     } catch (error) {
-        console.error("Box office route error:", error);
+        console.error(
+            "Box office route error:",
+            error
+        );
 
         res.status(500).json({
             success: false,
@@ -48,13 +69,16 @@ router.get("/test-apify", async (req, res) => {
 
 router.get("/sync-telangana", async (req, res) => {
     try {
-        const movie = req.query.movie || "The Paradise";
-
-        const result = await syncTelanganaBoxOffice(movie);
+        const result =
+            await syncTelanganaBoxOffice();
 
         res.json(result);
+
     } catch (error) {
-        console.error("Telangana sync error:", error);
+        console.error(
+            "Telangana sync error:",
+            error
+        );
 
         res.status(500).json({
             success: false,
