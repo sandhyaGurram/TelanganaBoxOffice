@@ -557,8 +557,8 @@ router.get("/districts", async (req, res) => {
             {
                 $match: {
                     district: {
-                        $ne: null,
-                        $ne: "",
+                        $type: "string",
+                        $regex: "\\S",
                     },
                 },
             },

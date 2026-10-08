@@ -1,7 +1,7 @@
 import { MapPin, Building2, Ticket } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const CityTable = ({ cities }) => {
+const CityTable = ({ districts }) => {
   const formatNumber = (value) => {
     return new Intl.NumberFormat("en-IN").format(value || 0);
   };
@@ -21,18 +21,20 @@ const CityTable = ({ cities }) => {
           <h2 className="district-title">District Performance</h2>
 
           <p className="district-description">
-            Telangana city-wise box office performance
+            Telangana district-wise box office performance
           </p>
         </div>
 
-        <span className="district-count">{cities.length} cities tracked</span>
+        <span className="district-count">
+          {districts.length} districts tracked
+        </span>
       </div>
 
       <div className="table-wrapper">
         <table className="district-table">
           <thead>
             <tr>
-              <th>City</th>
+              <th>District</th>
               <th>Shows</th>
               <th>Tickets Sold</th>
               <th>Theatres</th>
@@ -42,8 +44,8 @@ const CityTable = ({ cities }) => {
           </thead>
 
           <tbody>
-            {cities.map((city) => (
-              <tr key={city.city} className="district-row">
+            {districts.map((district) => (
+              <tr key={district.district} className="district-row">
                 <td>
                   <div className="district-name">
                     <div className="district-icon">
@@ -51,10 +53,10 @@ const CityTable = ({ cities }) => {
                     </div>
 
                     <Link
-                      to={`/cities/${encodeURIComponent(city.city)}`}
+                      to={`/districts/${encodeURIComponent(district.district)}`}
                       className="city-link"
                     >
-                      {city.city}
+                      {district.district}
                     </Link>
                   </div>
                 </td>
@@ -63,28 +65,31 @@ const CityTable = ({ cities }) => {
                   <div className="table-number">
                     <Ticket size={14} />
 
-                    {formatNumber(city.totalShows)}
+                    {formatNumber(district.totalShows)}
                   </div>
                 </td>
 
-                <td>{formatNumber(city.totalSold)}</td>
+                <td>{formatNumber(district.totalSold)}</td>
 
                 <td>
                   <div className="table-number">
                     <Building2 size={14} />
 
-                    {formatNumber(city.totalTheatres)}
+                    {formatNumber(district.theatreCount)}
                   </div>
                 </td>
 
                 <td>
                   <div className="occupancy-cell">
-                    <span>{city.occupancy}%</span>
+                    <span>{Number(district.occupancy || 0).toFixed(2)}%</span>
 
                     <div className="mini-progress">
                       <div
                         style={{
-                          width: `${Math.min(city.occupancy, 100)}%`,
+                          width: `${Math.min(
+                            Number(district.occupancy || 0),
+                            100,
+                          )}%`,
                         }}
                       />
                     </div>
@@ -92,7 +97,7 @@ const CityTable = ({ cities }) => {
                 </td>
 
                 <td className="gross-value">
-                  {formatCurrency(city.totalGross)}
+                  {formatCurrency(district.totalGross)}
                 </td>
               </tr>
             ))}

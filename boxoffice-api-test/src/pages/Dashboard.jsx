@@ -172,7 +172,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                <CityTable cities={cities} />
+                <CityTable districts={districts} />
               </>
             )}
           </main>
