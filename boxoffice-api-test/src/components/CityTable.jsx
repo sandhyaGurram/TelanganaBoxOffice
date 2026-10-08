@@ -18,7 +18,7 @@ const CityTable = ({ cities }) => {
     <div className="district-section">
       <div className="district-header">
         <div>
-          <h2 className="district-title">City Performance</h2>
+          <h2 className="district-title">District Performance</h2>
 
           <p className="district-description">
             Telangana city-wise box office performance

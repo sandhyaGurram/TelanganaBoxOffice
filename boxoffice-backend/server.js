@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import movieRoutes from "./routes/movieRoutes.js";
 import boxOfficeRoutes from "./routes/boxOfficeRoutes.js";
 import connectDB from "./config/db.js";
-import { syncMoviesFromTMDB } from "./services/movieSyncService.js";
+
 
 dotenv.config();
 
@@ -48,7 +48,7 @@ const startServer = async () => {
         app.listen(PORT, async () => {
             console.log(`Server running on http://localhost:${PORT}`);
 
-            await syncMoviesFromTMDB();
+
         });
     } catch (error) {
         console.error("Server startup failed:", error.message);

@@ -84,21 +84,28 @@ export const getApifyMovieBoxOffice = async () => {
             token: process.env.APIFY_API_TOKEN,
         });
 
-        // IMPORTANT:
-        // Do NOT send movieTitles.
-        // The Actor will collect all movies for the selected date.
         const input = {
-            dates: ["today"],
+            mode: "showtimes",
+            cities: ["telangana"],
+            movies: [],
+            daysAhead: 1,
+            languages: ["Telugu"],
+            emitSummaries: true,
+            summariesOnly: false,
+            includeSeatClasses: true,
+            maxItems: 200,
+            maxConcurrency: 8,
         };
 
         console.log("=================================");
-        console.log("Starting Apify Actor...");
-        console.log("Mode: ALL MOVIES");
-        console.log("Date: TODAY");
+        console.log("Starting District Movie Showtimes...");
+        console.log("Cities: Telangana");
+        console.log("Language: Telugu");
+        console.log("Days ahead:", input.daysAhead);
         console.log("=================================");
 
         const run = await client
-            .actor("monknwarriors/indian-boxoffice-tracker")
+            .actor("yugenox/district-movie-showtimes")
             .call(input);
 
         console.log("Apify run completed.");
@@ -110,22 +117,7 @@ export const getApifyMovieBoxOffice = async () => {
 
         console.log("Apify items received:", items.length);
 
-        // Check which movies were returned
-        const movieNames = [
-            ...new Set(
-                items
-                    .map((item) => item.movie_title)
-                    .filter(Boolean)
-            ),
-        ];
-
-        console.log("=================================");
-        console.log("MOVIES FOUND:", movieNames.length);
-        console.log(movieNames);
-        console.log("=================================");
-
         return items;
-
     } catch (error) {
         console.error("APIFY ERROR:", error.message);
         throw error;

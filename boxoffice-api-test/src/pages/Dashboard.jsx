@@ -20,6 +20,8 @@ const Dashboard = () => {
 
   const [cities, setCities] = useState([]);
 
+  const [districts, setDistricts] = useState([]);
+
   const fetchDashboard = async () => {
     try {
       setLoading(true);
@@ -41,6 +43,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchDashboard();
     fetchCities();
+    fetchDistricts();
   }, []);
 
   const formatNumber = (number) => {
@@ -62,6 +65,16 @@ const Dashboard = () => {
       setCities(response.data.data || []);
     } catch (error) {
       console.error("City API error:", error);
+    }
+  };
+
+  const fetchDistricts = async () => {
+    try {
+      const response = await api.get("/box-office/districts");
+
+      setDistricts(response.data.districts || []);
+    } catch (error) {
+      console.error("District API error:", error);
     }
   };
 

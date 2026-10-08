@@ -14,6 +14,12 @@ const boxOfficeSessionSchema = new mongoose.Schema(
             index: true,
         },
 
+        district: {
+            type: String,
+            default: null,
+            index: true,
+        },
+
         showTime: {
             type: String,
             required: true,
@@ -81,6 +87,8 @@ const boxOfficeSessionSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+
+
 
         occupancy: {
             type: Number,

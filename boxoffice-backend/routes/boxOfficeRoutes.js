@@ -8,7 +8,10 @@ import {
 import {
     syncTelanganaBoxOffice,
 } from "../services/boxOfficeSyncService.js";
-
+import {
+    getAllDistricts,
+    getCitiesByDistrict,
+} from "../utils/districtUtils.js";
 
 import BoxOfficeSession from "../models/BoxOfficeSession.js";
 
@@ -545,6 +548,189 @@ router.get("/shows/:sessionId", async (req, res) => {
 });
 
 
+
+
+
+router.get("/districts", async (req, res) => {
+    try {
+        const districts = await BoxOfficeSession.aggregate([
+            {
+                $match: {
+                    district: {
+                        $ne: null,
+                        $ne: "",
+                    },
+                },
+            },
+
+            {
+                $group: {
+                    _id: "$district",
+
+                    totalShows: {
+                        $sum: 1,
+                    },
+
+                    totalSold: {
+                        $sum: "$sold",
+                    },
+
+                    totalSeats: {
+                        $sum: "$totalSeats",
+                    },
+
+                    totalGross: {
+                        $sum: "$gross",
+                    },
+
+                    theatres: {
+                        $addToSet: "$venue",
+                    },
+
+                    cities: {
+                        $addToSet: "$city",
+                    },
+                },
+            },
+
+            {
+                $project: {
+                    _id: 0,
+
+                    district: "$_id",
+
+                    totalShows: 1,
+                    totalSold: 1,
+                    totalSeats: 1,
+                    totalGross: 1,
+
+                    theatreCount: {
+                        $size: "$theatres",
+                    },
+
+                    cityCount: {
+                        $size: "$cities",
+                    },
+
+                    occupancy: {
+                        $cond: [
+                            {
+                                $gt: ["$totalSeats", 0],
+                            },
+                            {
+                                $multiply: [
+                                    {
+                                        $divide: [
+                                            "$totalSold",
+                                            "$totalSeats",
+                                        ],
+                                    },
+                                    100,
+                                ],
+                            },
+                            0,
+                        ],
+                    },
+                },
+            },
+
+            {
+                $sort: {
+                    totalGross: -1,
+                },
+            },
+        ]);
+
+        res.json({
+            success: true,
+            districts,
+        });
+    } catch (error) {
+        console.error("District performance error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+
+
+router.get("/districts/:district", async (req, res) => {
+    try {
+        const district = decodeURIComponent(req.params.district);
+
+        const cities = await BoxOfficeSession.aggregate([
+            {
+                $match: {
+                    district: {
+                        $regex: `^${district}$`,
+                        $options: "i",
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: "$city",
+
+                    totalShows: {
+                        $sum: 1,
+                    },
+
+                    totalSold: {
+                        $sum: "$sold",
+                    },
+
+                    totalGross: {
+                        $sum: "$gross",
+                    },
+
+                    theatres: {
+                        $addToSet: "$venue",
+                    },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+
+                    city: "$_id",
+
+                    totalShows: 1,
+
+                    totalSold: 1,
+
+                    totalGross: 1,
+
+                    theatreCount: {
+                        $size: "$theatres",
+                    },
+                },
+            },
+
+            {
+                $sort: {
+                    city: 1,
+                },
+            },
+        ]);
+
+        res.json({
+            success: true,
+            district,
+            cities,
+        });
+    } catch (error) {
+        console.error("District cities error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
 
 
 

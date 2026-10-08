@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import CityDetails from "./pages/CityDetails";
 import TheatreDetails from "./pages/TheatreDetails";
 import ShowDetails from "./pages/ShowDetails";
+import DistrictDetails from "./pages/DistrictDetails";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
 
         {/* City details */}
         <Route path="/cities/:city" element={<CityDetails />} />
+
+        <Route path="/districts/:district" element={<DistrictDetails />} />
 
         <Route path="/theatres/:city/:venue" element={<TheatreDetails />} />
 

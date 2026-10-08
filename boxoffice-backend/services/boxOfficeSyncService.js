@@ -1,5 +1,6 @@
 import BoxOfficeSession from "../models/BoxOfficeSession.js";
 import { getApifyMovieBoxOffice } from "./boxOfficeService.js";
+import { getDistrictFromCity } from "../utils/districtUtils.js";
 
 export const syncTelanganaBoxOffice = async () => {
     console.log("====================================");
@@ -15,8 +16,8 @@ export const syncTelanganaBoxOffice = async () => {
     // 2. Get only Telangana SESSION records
     const sessions = items.filter(
         (item) =>
-            item.row_type === "SESSION" &&
-            item.state?.toLowerCase() === "telangana"
+            item.rowtype === "showtime" &&
+            item.language?.trim().toLowerCase() === "telugu"
     );
 
     console.log(
@@ -48,84 +49,57 @@ export const syncTelanganaBoxOffice = async () => {
 
     // 4. Normalize SESSION records
     const normalizedSessions = sessions.map((item) => {
-        const totalSeats = Number(
-            item.total_seats || 0
-        );
+        const totalSeats = Number(item.totalSeats || 0);
+        const sold = Number(item.soldSeats || 0);
 
-        const sold = Number(
-            item.sold || 0
-        );
+        const available = Math.max(totalSeats - sold, 0);
 
-        let available = item.available;
-
-        if (
-            available === null ||
-            available === undefined ||
-            available === ""
-        ) {
-            available = totalSeats - sold;
-        }
+        const district = getDistrictFromCity(item.city);
 
         return {
-            movieTitle:
-                item.movie_title?.trim() || "Unknown",
+            movieTitle: item.movieName?.trim() || "Unknown",
 
-            showDate:
-                formatShowDate(item.show_date),
+            district,
 
-            showTime:
-                item.time || null,
+            city: item.city?.trim() || null,
 
-            state:
-                item.state || "Telangana",
+            showDate: item.showDate || null,
 
-            city:
-                item.city?.trim() || null,
+            showTime: item.showTime || null,
 
-            chain:
-                item.chain || null,
+            chain: item.chain || null,
 
-            venue:
-                item.venue?.trim() || "Unknown",
+            venue: item.cinemaName?.trim() || "Unknown",
 
-            venueId:
-                item.venue_id || null,
+            auditorium: item.screen || null,
 
-            sessionId:
-                item.session_id,
+            format: item.screenFormat || null,
 
-            auditorium:
-                item.audi || null,
+            language: item.language || null,
 
-            format:
-                item.format || null,
+            experience: item.experience || null,
 
-            language:
-                item.language || null,
+            minPrice: Number(item.minPrice || 0),
+
+            maxPrice: Number(item.maxPrice || 0),
 
             totalSeats,
 
             sold,
 
-            available:
-                Number(available),
+            available,
 
-            occupancy:
-                Number(item.occupancy_pct || 0),
+            occupancy: Number(item.occupancyPct || 0),
 
-            gross:
-                Number(item.gross || 0),
+            gross: Number(item.estimatedGrossINR || 0),
 
-            source:
-                item.source || null,
+            movieUrl: item.movieUrl || null,
 
-            scrapedAt:
-                item.scraped_at
-                    ? new Date(item.scraped_at)
-                    : null,
+            source: "District",
 
-            syncedAt:
-                new Date(),
+            scrapedAt: new Date(),
+
+            syncedAt: new Date(),
         };
     });
 

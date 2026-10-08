@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-import { ArrowLeft, Building2, Ticket, Users, IndianRupee } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  Ticket,
+  Users,
+  IndianRupee,
+  Search,
+  X,
+  ArrowUpRight,
+} from "lucide-react";
 
 import api from "../services/api";
 
@@ -22,10 +31,14 @@ const CityDetails = () => {
 
   const [error, setError] = useState("");
 
+  // Theatre search
+  const [theatreSearch, setTheatreSearch] = useState("");
+
   useEffect(() => {
     const fetchCity = async () => {
       try {
         setLoading(true);
+        setError("");
 
         const response = await api.get(
           `/box-office/cities/${encodeURIComponent(decodedCity)}`,
@@ -56,6 +69,12 @@ const CityDetails = () => {
     }).format(value || 0);
   };
 
+  // Filter theatres based on search
+  const filteredTheatres =
+    data?.theatres?.filter((theatre) =>
+      theatre.toLowerCase().includes(theatreSearch.toLowerCase()),
+    ) || [];
+
   return (
     <div className="app">
       <div className="main-layout">
@@ -65,11 +84,13 @@ const CityDetails = () => {
           <Topbar />
 
           <main className="page">
+            {/* Back */}
             <Link to="/dashboard" className="back-link">
               <ArrowLeft size={16} />
               Back to Dashboard
             </Link>
 
+            {/* Page Header */}
             <div className="page-header city-page-header">
               <h1 className="page-title">{decodedCity}</h1>
 
@@ -78,12 +99,19 @@ const CityDetails = () => {
               </p>
             </div>
 
+            {/* Loading */}
             {loading && <div className="loading">Loading city data...</div>}
 
+            {/* Error */}
             {error && <div className="error-message">{error}</div>}
 
+            {/* Data */}
             {!loading && data && data.summary && (
               <>
+                {/* ==========================
+                    CITY STATISTICS
+                ========================== */}
+
                 <div className="stats-grid">
                   <StatCard
                     title="Total Shows"
@@ -114,28 +142,122 @@ const CityDetails = () => {
                   />
                 </div>
 
+                {/* ==========================
+                    THEATRE DIRECTORY
+                ========================== */}
+
                 <div className="panel city-theatre-panel">
-                  <h2 className="panel-title">Theatres in {decodedCity}</h2>
+                  {/* Header */}
 
-                  <p className="panel-description">
-                    {data.summary.totalTheatres} theatres tracked
-                  </p>
+                  <div className="theatre-directory-header">
+                    <div>
+                      <div className="theatre-title-row">
+                        <h2 className="panel-title">
+                          Theatres in {decodedCity}
+                        </h2>
 
-                  <div className="theatre-list">
-                    {data.theatres.map((theatre) => (
-                      <Link
-                        key={theatre}
-                        to={`/theatres/${encodeURIComponent(
-                          decodedCity,
-                        )}/${encodeURIComponent(theatre)}`}
-                        className="theatre-item"
-                      >
-                        <Building2 size={17} />
+                        <span className="theatre-count">
+                          {data.summary.totalTheatres}
+                        </span>
+                      </div>
 
-                        <span>{theatre}</span>
-                      </Link>
-                    ))}
+                      <p className="panel-description">
+                        Browse tracked theatres and view their show-level
+                        performance.
+                      </p>
+                    </div>
                   </div>
+
+                  {/* Search */}
+
+                  <div className="theatre-search-box">
+                    <Search size={17} className="theatre-search-icon" />
+
+                    <input
+                      type="text"
+                      value={theatreSearch}
+                      onChange={(e) => setTheatreSearch(e.target.value)}
+                      placeholder="Search theatres..."
+                    />
+
+                    {theatreSearch && (
+                      <button
+                        type="button"
+                        className="theatre-search-clear"
+                        onClick={() => setTheatreSearch("")}
+                        aria-label="Clear search"
+                      >
+                        <X size={16} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Search result count */}
+
+                  <div className="theatre-results-info">
+                    <span>
+                      Showing <strong>{filteredTheatres.length}</strong> of{" "}
+                      <strong>{data.summary.totalTheatres}</strong> theatres
+                    </span>
+                  </div>
+
+                  {/* Theatre Cards */}
+
+                  {filteredTheatres.length > 0 ? (
+                    <div className="theatre-grid">
+                      {filteredTheatres.map((theatre, index) => (
+                        <Link
+                          key={theatre}
+                          to={`/theatres/${encodeURIComponent(
+                            decodedCity,
+                          )}/${encodeURIComponent(theatre)}`}
+                          className="theatre-card"
+                        >
+                          {/* Number */}
+
+                          <div className="theatre-number">
+                            {String(index + 1).padStart(2, "0")}
+                          </div>
+
+                          {/* Theatre content */}
+
+                          <div className="theatre-card-content">
+                            <div className="theatre-icon-box">
+                              <Building2 size={18} />
+                            </div>
+
+                            <div className="theatre-card-main">
+                              <h3>{theatre}</h3>
+
+                              <span>
+                                View shows
+                                <ArrowUpRight size={14} />
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    /* Empty Search */
+
+                    <div className="theatre-empty-state">
+                      <div className="theatre-empty-icon">
+                        <Search size={22} />
+                      </div>
+
+                      <h3>No theatres found</h3>
+
+                      <p>No theatre matches "{theatreSearch}".</p>
+
+                      <button
+                        type="button"
+                        onClick={() => setTheatreSearch("")}
+                      >
+                        Clear search
+                      </button>
+                    </div>
+                  )}
                 </div>
               </>
             )}
