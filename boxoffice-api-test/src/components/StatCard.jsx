@@ -1,20 +1,18 @@
 const StatCard = ({ title, value, subtitle, icon: Icon }) => {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-      <div className="flex items-start justify-between">
+    <div className="stat-card">
+      <div className="stat-card-top">
         <div>
-          <p className="text-sm text-slate-400">{title}</p>
+          <p className="stat-title">{title}</p>
 
-          <h3 className="mt-2 text-2xl font-semibold text-white">{value}</h3>
+          <h3 className="stat-value">{value}</h3>
 
-          {subtitle && (
-            <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
-          )}
+          {subtitle && <p className="stat-subtitle">{subtitle}</p>}
         </div>
 
         {Icon && (
-          <div className="rounded-lg bg-slate-800 p-3">
-            <Icon size={20} className="text-slate-300" />
+          <div className="stat-icon">
+            <Icon size={19} />
           </div>
         )}
       </div>

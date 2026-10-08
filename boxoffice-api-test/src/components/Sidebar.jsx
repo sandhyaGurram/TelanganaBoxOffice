@@ -9,60 +9,42 @@ import {
 
 const Sidebar = () => {
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 border-r border-slate-800 bg-slate-950">
-      <div className="border-b border-slate-800 px-6 py-5">
-        <h1 className="text-xl font-bold text-white">Telangana Box Office</h1>
+    <aside className="sidebar">
+      <div className="sidebar-brand">
+        <h1 className="sidebar-title">Telangana Box Office</h1>
 
-        <p className="mt-1 text-xs text-slate-500">Analytics Dashboard</p>
+        <p className="sidebar-subtitle">Analytics Dashboard</p>
       </div>
 
-      <nav className="space-y-1 p-4">
-        <a
-          href="/"
-          className="flex items-center gap-3 rounded-lg bg-slate-800 px-4 py-3 text-sm text-white"
-        >
+      <nav className="sidebar-nav">
+        <a href="/" className="sidebar-link active">
           <LayoutDashboard size={18} />
-          Dashboard
+          <span>Dashboard</span>
         </a>
 
-        <a
-          href="#movies"
-          className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-400 hover:bg-slate-900 hover:text-white"
-        >
+        <a href="#movies" className="sidebar-link">
           <Film size={18} />
-          Movies
+          <span>Movies</span>
         </a>
 
-        <a
-          href="#districts"
-          className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-400 hover:bg-slate-900 hover:text-white"
-        >
+        <a href="#districts" className="sidebar-link">
           <Map size={18} />
-          Districts
+          <span>Cites</span>
         </a>
 
-        <a
-          href="#theatres"
-          className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-400 hover:bg-slate-900 hover:text-white"
-        >
+        <a href="#theatres" className="sidebar-link">
           <Building2 size={18} />
-          Theatres
+          <span>Theatres</span>
         </a>
 
-        <a
-          href="#analytics"
-          className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-400 hover:bg-slate-900 hover:text-white"
-        >
+        <a href="#analytics" className="sidebar-link">
           <BarChart3 size={18} />
-          Analytics
+          <span>Analytics</span>
         </a>
 
-        <a
-          href="#settings"
-          className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-slate-400 hover:bg-slate-900 hover:text-white"
-        >
+        <a href="#settings" className="sidebar-link">
           <Settings size={18} />
-          Settings
+          <span>Settings</span>
         </a>
       </nav>
     </aside>

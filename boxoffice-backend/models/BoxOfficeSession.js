@@ -25,12 +25,6 @@ const boxOfficeSessionSchema = new mongoose.Schema(
             index: true,
         },
 
-        district: {
-            type: String,
-            default: null,
-            index: true,
-        },
-
         city: {
             type: String,
             required: true,
@@ -121,18 +115,15 @@ const boxOfficeSessionSchema = new mongoose.Schema(
 // Prevent duplicate show records
 boxOfficeSessionSchema.index(
     {
-        movieTitle: 1,
-        showDate: 1,
         sessionId: 1,
+        showDate: 1,
     },
     {
         unique: true,
     }
 );
 
-const BoxOfficeSession = mongoose.model(
+export default mongoose.model(
     "BoxOfficeSession",
     boxOfficeSessionSchema
 );
-
-export default BoxOfficeSession;

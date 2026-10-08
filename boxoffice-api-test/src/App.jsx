@@ -1,7 +1,29 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Dashboard from "./pages/Dashboard";
+import CityDetails from "./pages/CityDetails";
+import TheatreDetails from "./pages/TheatreDetails";
+import ShowDetails from "./pages/ShowDetails";
 
 function App() {
-  return <Dashboard />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Default page */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+        {/* Dashboard */}
+        <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* City details */}
+        <Route path="/cities/:city" element={<CityDetails />} />
+
+        <Route path="/theatres/:city/:venue" element={<TheatreDetails />} />
+
+        <Route path="/shows/:sessionId" element={<ShowDetails />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

@@ -1,95 +1,95 @@
-const telanganaDistrictMap = {
-    Adilabad: "Adilabad",
+// const telanganaDistrictMap = {
+//     Adilabad: "Adilabad",
 
-    Armoor: "Nizamabad",
-    Bodhan: "Nizamabad",
-    Nizamabad: "Nizamabad",
+//     Armoor: "Nizamabad",
+//     Bodhan: "Nizamabad",
+//     Nizamabad: "Nizamabad",
 
-    Aswaraopeta: "Bhadradri Kothagudem",
-    Bhadrachalam: "Bhadradri Kothagudem",
-    Kothagudem: "Bhadradri Kothagudem",
-    Manuguru: "Bhadradri Kothagudem",
+//     Aswaraopeta: "Bhadradri Kothagudem",
+//     Bhadrachalam: "Bhadradri Kothagudem",
+//     Kothagudem: "Bhadradri Kothagudem",
+//     Manuguru: "Bhadradri Kothagudem",
 
-    Bellampally: "Mancherial",
-    Luxettipet: "Mancherial",
-    Mancherial: "Mancherial",
+//     Bellampally: "Mancherial",
+//     Luxettipet: "Mancherial",
+//     Mancherial: "Mancherial",
 
-    Bhupalpalle: "Jayashankar Bhupalapally",
+//     Bhupalpalle: "Jayashankar Bhupalapally",
 
-    Gadwal: "Jogulamba Gadwal",
+//     Gadwal: "Jogulamba Gadwal",
 
-    Jagtial: "Jagtial",
-    Korutla: "Jagtial",
-    Mettupally: "Jagtial",
+//     Jagtial: "Jagtial",
+//     Korutla: "Jagtial",
+//     Mettupally: "Jagtial",
 
-    Jangaon: "Jangaon",
+//     Jangaon: "Jangaon",
 
-    Kamareddy: "Kamareddy",
+//     Kamareddy: "Kamareddy",
 
-    Karimnagar: "Karimnagar",
+//     Karimnagar: "Karimnagar",
 
-    Khammam: "Khammam",
+//     Khammam: "Khammam",
 
-    Mahabubabad: "Mahabubabad",
-    Thorrur: "Mahabubabad",
+//     Mahabubabad: "Mahabubabad",
+//     Thorrur: "Mahabubabad",
 
-    Mahbubnagar: "Mahabubnagar",
+//     Mahbubnagar: "Mahabubnagar",
 
-    Kalwakurthy: "Nagarkurnool",
+//     Kalwakurthy: "Nagarkurnool",
 
-    Kosgi: "Narayanpet",
+//     Kosgi: "Narayanpet",
 
-    Devarakonda: "Nalgonda",
-    Haliya: "Nalgonda",
-    Miryalaguda: "Nalgonda",
-    Nalgonda: "Nalgonda",
-    Chityal: "Nalgonda",
+//     Devarakonda: "Nalgonda",
+//     Haliya: "Nalgonda",
+//     Miryalaguda: "Nalgonda",
+//     Nalgonda: "Nalgonda",
+//     Chityal: "Nalgonda",
 
-    Nirmal: "Nirmal",
+//     Nirmal: "Nirmal",
 
-    Godavarikhani: "Peddapalli",
-    Manthani: "Peddapalli",
-    Peddapalli: "Peddapalli",
-    Sultanabad: "Peddapalli",
+//     Godavarikhani: "Peddapalli",
+//     Manthani: "Peddapalli",
+//     Peddapalli: "Peddapalli",
+//     Sultanabad: "Peddapalli",
 
-    Sircilla: "Rajanna Sircilla",
-    Vemulawada: "Rajanna Sircilla",
+//     Sircilla: "Rajanna Sircilla",
+//     Vemulawada: "Rajanna Sircilla",
 
-    Gajwel: "Siddipet",
-    Siddipet: "Siddipet",
+//     Gajwel: "Siddipet",
+//     Siddipet: "Siddipet",
 
-    Kodad: "Suryapet",
-    Huzurnagar: "Suryapet",
-    Suryapet: "Suryapet",
+//     Kodad: "Suryapet",
+//     Huzurnagar: "Suryapet",
+//     Suryapet: "Suryapet",
 
-    Narayankhed: "Sangareddy",
-    Sadashivpet: "Sangareddy",
-    Sangareddy: "Sangareddy",
-    Zaheerabad: "Sangareddy",
+//     Narayankhed: "Sangareddy",
+//     Sadashivpet: "Sangareddy",
+//     Sangareddy: "Sangareddy",
+//     Zaheerabad: "Sangareddy",
 
-    Narsampet: "Warangal",
-    Nekkonda: "Warangal",
-    Warangal: "Warangal",
+//     Narsampet: "Warangal",
+//     Nekkonda: "Warangal",
+//     Warangal: "Warangal",
 
-    Tandur: "Vikarabad",
+//     Tandur: "Vikarabad",
 
-    Wanaparthy: "Wanaparthy",
+//     Wanaparthy: "Wanaparthy",
 
-    Amangal: "Rangareddy",
-    Shadnagar: "Rangareddy",
-    Shankarpally: "Rangareddy",
+//     Amangal: "Rangareddy",
+//     Shadnagar: "Rangareddy",
+//     Shankarpally: "Rangareddy",
 
-    Parkal: "Hanumakonda",
+//     Parkal: "Hanumakonda",
 
-    Medak: "Medak",
+//     Medak: "Medak",
 
-    Mulugu: "Mulugu",
+//     Mulugu: "Mulugu",
 
-    Narayanpet: "Narayanpet",
+//     Narayanpet: "Narayanpet",
 
-    Sangareddy: "Sangareddy",
+//     Sangareddy: "Sangareddy",
 
-    SirpurKagaznagar: "Kumuram Bheem",
-};
+//     SirpurKagaznagar: "Kumuram Bheem",
+// };
 
-export default telanganaDistrictMap;
+// export default telanganaDistrictMap;

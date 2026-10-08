@@ -144,6 +144,386 @@ router.get("/dashboard", async (req, res) => {
 
 
 
+
+router.get("/cities", async (req, res) => {
+    try {
+        const movie = req.query.movie;
+
+        const match = {
+            state: "Telangana",
+        };
+
+        if (movie) {
+            match.movieTitle = movie;
+        }
+
+        const cities = await BoxOfficeSession.aggregate([
+            {
+                $match: match,
+            },
+
+            {
+                $group: {
+                    _id: "$city",
+
+                    totalShows: {
+                        $sum: 1,
+                    },
+
+                    totalSeats: {
+                        $sum: "$totalSeats",
+                    },
+
+                    totalSold: {
+                        $sum: "$sold",
+                    },
+
+                    totalAvailable: {
+                        $sum: "$available",
+                    },
+
+                    totalGross: {
+                        $sum: "$gross",
+                    },
+
+                    theatres: {
+                        $addToSet: "$venue",
+                    },
+                },
+            },
+
+            {
+                $project: {
+                    _id: 0,
+
+                    city: "$_id",
+
+                    totalShows: 1,
+
+                    totalSeats: 1,
+
+                    totalSold: 1,
+
+                    totalAvailable: 1,
+
+                    totalGross: 1,
+
+                    totalTheatres: {
+                        $size: "$theatres",
+                    },
+
+                    occupancy: {
+                        $cond: [
+                            {
+                                $gt: ["$totalSeats", 0],
+                            },
+                            {
+                                $multiply: [
+                                    {
+                                        $divide: [
+                                            "$totalSold",
+                                            "$totalSeats",
+                                        ],
+                                    },
+                                    100,
+                                ],
+                            },
+                            0,
+                        ],
+                    },
+                },
+            },
+
+            {
+                $sort: {
+                    totalGross: -1,
+                },
+            },
+        ]);
+
+        const formattedCities = cities.map(
+            (city) => ({
+                ...city,
+
+                occupancy: Number(
+                    city.occupancy.toFixed(2)
+                ),
+            })
+        );
+
+        res.json({
+            success: true,
+            count: formattedCities.length,
+            data: formattedCities,
+        });
+
+    } catch (error) {
+        console.error(
+            "City API error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+
+
+
+router.get("/cities/:city", async (req, res) => {
+    try {
+        const city = req.params.city;
+
+        const sessions = await BoxOfficeSession.find({
+            state: "Telangana",
+            city: {
+                $regex: `^${city}$`,
+                $options: "i",
+            },
+        })
+            .sort({
+                showDate: -1,
+                showTime: 1,
+            })
+            .lean();
+
+        const totalShows = sessions.length;
+
+        const totalSeats = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.totalSeats || 0),
+            0
+        );
+
+        const totalSold = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.sold || 0),
+            0
+        );
+
+        const totalAvailable = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.available || 0),
+            0
+        );
+
+        const totalGross = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.gross || 0),
+            0
+        );
+
+        const occupancy =
+            totalSeats > 0
+                ? (totalSold / totalSeats) * 100
+                : 0;
+
+        const theatres = [
+            ...new Set(
+                sessions
+                    .map((session) => session.venue)
+                    .filter(Boolean)
+            ),
+        ];
+
+        const movies = [
+            ...new Set(
+                sessions
+                    .map((session) => session.movieTitle)
+                    .filter(Boolean)
+            ),
+        ];
+
+        res.json({
+            success: true,
+
+            city,
+
+            summary: {
+                totalShows,
+                totalSeats,
+                totalSold,
+                totalAvailable,
+                totalGross,
+                occupancy: Number(
+                    occupancy.toFixed(2)
+                ),
+                totalTheatres: theatres.length,
+                totalMovies: movies.length,
+            },
+
+            theatres,
+
+            movies,
+
+            sessions,
+        });
+
+    } catch (error) {
+        console.error(
+            "City details error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+router.get("/theatres/:city/:venue", async (req, res) => {
+    try {
+        const { city, venue } = req.params;
+
+        const sessions = await BoxOfficeSession.find({
+            state: "Telangana",
+
+            city: {
+                $regex: `^${city}$`,
+                $options: "i",
+            },
+
+            venue: {
+                $regex: `^${venue}$`,
+                $options: "i",
+            },
+        })
+            .sort({
+                showDate: -1,
+                showTime: 1,
+            })
+            .lean();
+
+        if (!sessions.length) {
+            return res.status(404).json({
+                success: false,
+                message: "Theatre data not found",
+            });
+        }
+
+        const totalShows = sessions.length;
+
+        const totalSeats = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.totalSeats || 0),
+            0
+        );
+
+        const totalSold = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.sold || 0),
+            0
+        );
+
+        const totalAvailable = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.available || 0),
+            0
+        );
+
+        const totalGross = sessions.reduce(
+            (sum, session) =>
+                sum + Number(session.gross || 0),
+            0
+        );
+
+        const occupancy =
+            totalSeats > 0
+                ? (totalSold / totalSeats) * 100
+                : 0;
+
+        const movies = [
+            ...new Set(
+                sessions
+                    .map((session) => session.movieTitle)
+                    .filter(Boolean)
+            ),
+        ];
+
+        res.json({
+            success: true,
+
+            city,
+
+            venue,
+
+            summary: {
+                totalShows,
+                totalSeats,
+                totalSold,
+                totalAvailable,
+                totalGross,
+
+                occupancy: Number(
+                    occupancy.toFixed(2)
+                ),
+
+                totalMovies: movies.length,
+            },
+
+            movies,
+
+            sessions,
+        });
+
+    } catch (error) {
+        console.error(
+            "Theatre details error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+
+router.get("/shows/:sessionId", async (req, res) => {
+    try {
+        const { sessionId } = req.params;
+
+        const session = await BoxOfficeSession.findOne({
+            sessionId,
+        }).lean();
+
+        if (!session) {
+            return res.status(404).json({
+                success: false,
+                message: "Show not found",
+            });
+        }
+
+        res.json({
+            success: true,
+            data: session,
+        });
+
+    } catch (error) {
+        console.error(
+            "Show details error:",
+            error
+        );
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+
+
+
 export default router;
 
 

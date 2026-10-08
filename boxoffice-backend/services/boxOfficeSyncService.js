@@ -1,6 +1,6 @@
 import BoxOfficeSession from "../models/BoxOfficeSession.js";
 import { getApifyMovieBoxOffice } from "./boxOfficeService.js";
-import telanganaDistrictMap from "./telanganaDistrictMap.js";
+
 
 export const syncTelanganaBoxOffice = async (movie) => {
     console.log("====================================");
@@ -34,7 +34,7 @@ export const syncTelanganaBoxOffice = async (movie) => {
     const normalizedSessions = sessions.map((item) => {
         const city = item.city?.trim();
 
-        const district = telanganaDistrictMap[city] || null;
+
 
         const totalSeats = Number(item.total_seats || 0);
         const sold = Number(item.sold || 0);
@@ -58,9 +58,7 @@ export const syncTelanganaBoxOffice = async (movie) => {
 
             state: item.state || "Telangana",
 
-            district,
-
-            city,
+            city: item.city?.trim(),
 
             chain: item.chain || null,
 
@@ -76,11 +74,17 @@ export const syncTelanganaBoxOffice = async (movie) => {
 
             language: item.language || null,
 
-            totalSeats,
+            totalSeats: Number(item.total_seats || 0),
 
-            sold,
+            sold: Number(item.sold || 0),
 
-            available: Number(available || 0),
+            available: Number(
+                item.available ??
+                (
+                    Number(item.total_seats || 0) -
+                    Number(item.sold || 0)
+                )
+            ),
 
             occupancy: Number(item.occupancy_pct || 0),
 

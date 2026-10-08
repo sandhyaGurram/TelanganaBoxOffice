@@ -147,6 +147,17 @@ export const getTelanganaBoxOffice = async (movie) => {
         ],
     };
 
+    const movieNames = [
+        ...new Set(
+            telanganaItems
+                .map((item) => item.movie_title)
+                .filter(Boolean)
+        ),
+    ];
+
+    console.log("TELANGANA MOVIES:");
+    console.log(movieNames);
+
     return {
         summary,
         data: telanganaItems,
