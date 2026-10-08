@@ -13,6 +13,8 @@ import {
     getCitiesByDistrict,
 } from "../utils/districtUtils.js";
 
+import { getDistrictFromCity } from "../utils/districtUtils.js";
+
 import BoxOfficeSession from "../models/BoxOfficeSession.js";
 
 const router = express.Router();
@@ -732,6 +734,119 @@ router.get("/districts/:district", async (req, res) => {
     }
 });
 
+
+
+router.get("/fix-districts", async (req, res) => {
+    try {
+        const sessions = await BoxOfficeSession.find({});
+
+        let updated = 0;
+        let unmapped = 0;
+
+        const unmappedCities = new Set();
+
+        for (const session of sessions) {
+            const district = getDistrictFromCity(session.city);
+
+            if (!district) {
+                unmapped++;
+
+                if (session.city) {
+                    unmappedCities.add(session.city);
+                }
+
+                continue;
+            }
+
+            if (session.district !== district) {
+                await BoxOfficeSession.updateOne(
+                    { _id: session._id },
+                    {
+                        $set: {
+                            district,
+                        },
+                    }
+                );
+
+                updated++;
+            }
+        }
+
+        res.json({
+            success: true,
+            totalRecords: sessions.length,
+            updated,
+            unmapped,
+            unmappedCities: [...unmappedCities],
+        });
+    } catch (error) {
+        console.error("Fix districts error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+router.get("/debug-hyderabad", async (req, res) => {
+    try {
+        const records = await BoxOfficeSession.find({
+            city: {
+                $regex: "^Hyderabad$",
+                $options: "i",
+            },
+        })
+            .select("movieTitle city district venue showDate showTime")
+            .lean();
+
+        res.json({
+            success: true,
+            count: records.length,
+            records,
+        });
+    } catch (error) {
+        console.error("Hyderabad debug error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+router.get("/fix-hyderabad", async (req, res) => {
+    try {
+        const result = await BoxOfficeSession.updateMany(
+            {
+                city: {
+                    $regex: "^Hyderabad$",
+                    $options: "i",
+                },
+            },
+            {
+                $set: {
+                    district: "Hyderabad",
+                },
+            }
+        );
+
+        res.json({
+            success: true,
+            matched: result.matchedCount,
+            modified: result.modifiedCount,
+        });
+    } catch (error) {
+        console.error("Fix Hyderabad error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
 
 
 export default router;
