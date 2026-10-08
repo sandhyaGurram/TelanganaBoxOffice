@@ -1,4 +1,9 @@
 const telanganaDistricts = {
+
+    Hyderabad: [
+        "Hyderabad",
+        "Secunderabad",
+    ],
     Adilabad: [
         "Adilabad",
     ],
