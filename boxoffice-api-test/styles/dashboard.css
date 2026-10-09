@@ -1,6 +1,15 @@
 /* =========================================
    LAYOUT
 ========================================= */
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+* {
+    box-sizing: border-box;
+}
+
 
 .app {
   min-height: 100vh;
@@ -1343,6 +1352,7 @@
   margin: 18px 0 14px;
   font-size: 18px;
   font-weight: 600;
+  color: #111827;
 }
 
 .district-city-stats {
@@ -1377,5 +1387,288 @@
 
   .district-city-card {
     padding: 16px;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+   .theatre-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .district-section {
+        margin-top: 16px;
+        border-radius: 14px;
+    }
+
+    .district-header {
+        padding: 16px;
+    }
+
+    .district-title {
+        font-size: 18px;
+    }
+
+    .district-description {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .district-count {
+        font-size: 11px;
+    }
+
+    .table-wrapper {
+        overflow: visible;
+    }
+
+    .district-table {
+        display: block;
+    }
+
+    .district-table thead {
+        display: none;
+    }
+
+    .district-table tbody {
+        display: grid;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .district-table tr {
+        display: block;
+        padding: 16px;
+        border: 1px solid #202a3a;
+        border-radius: 14px;
+        background: #0d1522;
+    }
+
+    .district-table td {
+        display: block;
+        padding: 0;
+        border: none;
+    }
+
+    .district-table td:first-child {
+        margin-bottom: 16px;
+    }
+
+    .district-table td:nth-child(2),
+    .district-table td:nth-child(3),
+    .district-table td:nth-child(4) {
+        display: inline-flex;
+        width: 33.33%;
+        margin-bottom: 14px;
+    }
+
+    .district-table td:nth-child(5) {
+        margin-top: 4px;
+        margin-bottom: 14px;
+    }
+
+    .district-table td:nth-child(6) {
+        padding-top: 12px;
+        border-top: 1px solid #202a3a;
+    }
+ .district-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .district-name .city-link {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .district-icon {
+        flex-shrink: 0;
+    }
+    .table-number {
+        font-size: 12px;
+        gap: 5px;
+    }
+    .occupancy-cell {
+        width: 100%;
+    }
+
+    .mini-progress {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 6px;
+    }
+    .gross-value {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 700;
+    }
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        width: 100%;
+    }
+    .page {
+        padding: 16px;
+    }
+
+    .main-content {
+        width: 100%;
+    }
+    .topbar-search {
+        display: none;
+    }
+
+}
+
+@media (max-width: 420px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .page {
+        padding: 12px;
+    }
+
+}
+
+
+
+
+
+/* Global search and filters */
+.topbar-global {
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.topbar-heading {
+  flex-shrink: 0;
+}
+
+.global-filter-panel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.global-filter-search,
+.global-filter-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid #263244;
+  border-radius: 8px;
+  background: #0e1521;
+  color: #a9b5c7;
+}
+
+.global-filter-search {
+  min-width: 230px;
+}
+
+.global-filter-search input,
+.global-filter-date input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f8fafc;
+}
+
+.global-filter-date input {
+  color-scheme: dark;
+}
+
+.global-filter-panel select {
+  min-height: 40px;
+  max-width: 170px;
+  padding: 0 10px;
+  border: 1px solid #263244;
+  border-radius: 8px;
+  background: #0e1521;
+  color: #e5e7eb;
+}
+
+.global-filter-apply {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #a51e27;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.global-filter-panel button:focus-visible,
+.global-filter-panel input:focus-visible,
+.global-filter-panel select:focus-visible {
+  outline: 2px solid #a51e27;
+  outline-offset: 2px;
+}
+
+@media (max-width: 1100px) {
+  .topbar-global {
+    flex-direction: column;
+  }
+
+  .global-filter-panel {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .global-filter-panel {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .global-filter-search {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .global-filter-panel select,
+  .global-filter-date {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .global-filter-apply {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .global-filter-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .global-filter-search {
+    grid-column: auto;
   }
 }

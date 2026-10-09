@@ -93,45 +93,77 @@ router.get("/sync-telangana", async (req, res) => {
 });
 
 
-router.get("/dashboard", async (req, res) => {
-    try {
-        const movie = req.query.movie;
 
-        const match = {
-            state: "Telangana",
+
+
+const escapeRegex = (value = "") =>
+    String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const buildSessionMatch = (query = {}) => {
+    const match = {
+        state: "Telangana",
+    };
+
+    // Keep the dashboard restricted to Telugu movies.
+    match.language = {
+        $regex: "^Telugu$",
+        $options: "i",
+    };
+
+    if (query.district) {
+        match.district = {
+            $regex: `^${escapeRegex(query.district.trim())}$`,
+            $options: "i",
+        };
+    }
+
+    if (query.city) {
+        match.city = {
+            $regex: `^${escapeRegex(query.city.trim())}$`,
+            $options: "i",
+        };
+    }
+
+    if (query.date) {
+        match.showDate = query.date;
+    }
+
+    if (query.search?.trim()) {
+        const searchRegex = {
+            $regex: escapeRegex(query.search.trim()),
+            $options: "i",
         };
 
-        if (movie) {
-            match.movieTitle = movie;
-        }
+        match.$or = [
+            { movieTitle: searchRegex },
+            { district: searchRegex },
+            { city: searchRegex },
+            { venue: searchRegex },
+        ];
+    }
+
+    return match;
+};
+
+
+
+
+
+
+router.get("/dashboard", async (req, res) => {
+    try {
+        const match = buildSessionMatch(req.query);
 
         const stats = await BoxOfficeSession.aggregate([
-            {
-                $match: match,
-            },
+            { $match: match },
             {
                 $group: {
                     _id: null,
-
-                    totalShows: {
-                        $sum: 1,
-                    },
-
-                    totalSeats: {
-                        $sum: "$totalSeats",
-                    },
-
-                    totalSold: {
-                        $sum: "$sold",
-                    },
-
-                    totalAvailable: {
-                        $sum: "$available",
-                    },
-
-                    totalGross: {
-                        $sum: "$gross",
-                    },
+                    totalShows: { $sum: 1 },
+                    totalSeats: { $sum: "$totalSeats" },
+                    totalSold: { $sum: "$sold" },
+                    totalAvailable: { $sum: "$available" },
+                    totalGross: { $sum: "$gross" },
                 },
             },
         ]);
@@ -144,10 +176,9 @@ router.get("/dashboard", async (req, res) => {
             totalGross: 0,
         };
 
-        const occupancy =
-            result.totalSeats > 0
-                ? (result.totalSold / result.totalSeats) * 100
-                : 0;
+        const occupancy = result.totalSeats > 0
+            ? (result.totalSold / result.totalSeats) * 100
+            : 0;
 
         res.json({
             success: true,
@@ -169,6 +200,7 @@ router.get("/dashboard", async (req, res) => {
         });
     }
 });
+
 
 
 
@@ -553,72 +585,37 @@ router.get("/shows/:sessionId", async (req, res) => {
 
 
 
+
 router.get("/districts", async (req, res) => {
     try {
-        const districts = await BoxOfficeSession.aggregate([
-            {
-                $match: {
-                    district: {
-                        $type: "string",
-                        $regex: "\\S",
-                    },
-                },
-            },
+        const match = buildSessionMatch(req.query);
 
+        const districts = await BoxOfficeSession.aggregate([
+            { $match: match },
             {
                 $group: {
                     _id: "$district",
-
-                    totalShows: {
-                        $sum: 1,
-                    },
-
-                    totalSold: {
-                        $sum: "$sold",
-                    },
-
-                    totalSeats: {
-                        $sum: "$totalSeats",
-                    },
-
-                    totalGross: {
-                        $sum: "$gross",
-                    },
-
-                    theatres: {
-                        $addToSet: "$venue",
-                    },
-
-                    cities: {
-                        $addToSet: "$city",
-                    },
+                    totalShows: { $sum: 1 },
+                    totalSold: { $sum: "$sold" },
+                    totalSeats: { $sum: "$totalSeats" },
+                    totalGross: { $sum: "$gross" },
+                    theatres: { $addToSet: "$venue" },
+                    cities: { $addToSet: "$city" },
                 },
             },
-
             {
                 $project: {
                     _id: 0,
-
                     district: "$_id",
-
                     totalShows: 1,
                     totalSold: 1,
                     totalSeats: 1,
                     totalGross: 1,
-
-                    theatreCount: {
-                        $size: "$theatres",
-                    },
-
-                    cityCount: {
-                        $size: "$cities",
-                    },
-
+                    theatreCount: { $size: "$theatres" },
+                    cityCount: { $size: "$cities" },
                     occupancy: {
                         $cond: [
-                            {
-                                $gt: ["$totalSeats", 0],
-                            },
+                            { $gt: ["$totalSeats", 0] },
                             {
                                 $multiply: [
                                     {
@@ -635,17 +632,16 @@ router.get("/districts", async (req, res) => {
                     },
                 },
             },
-
-            {
-                $sort: {
-                    totalGross: -1,
-                },
-            },
+            { $sort: { totalGross: -1 } },
         ]);
 
         res.json({
             success: true,
-            districts,
+            count: districts.length,
+            districts: districts.map((district) => ({
+                ...district,
+                occupancy: Number(district.occupancy.toFixed(2)),
+            })),
         });
     } catch (error) {
         console.error("District performance error:", error);
@@ -656,6 +652,7 @@ router.get("/districts", async (req, res) => {
         });
     }
 });
+
 
 
 
