@@ -1756,10 +1756,100 @@ body {
 
 /* Theatre show table - mobile responsive layout */
 
+
+/* Theatre Details - Responsive Shows */
+
 @media (max-width: 768px) {
   .theatre-shows-panel {
+    width: 100%;
     min-width: 0;
     overflow: hidden;
+  }
+
+  .theatre-table-wrapper {
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .theatre-table-wrapper .district-table {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    border-collapse: separate;
+  }
+
+  .theatre-table-wrapper .district-table thead {
+    display: none !important;
+  }
+
+  .theatre-table-wrapper .district-table tbody {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .theatre-table-wrapper .district-table tbody tr.district-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 12px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #273244;
+    border-radius: 12px;
+    background: #111827;
+  }
+
+  .theatre-table-wrapper .district-table tbody tr.district-row > td {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100% !important;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 12px 4px;
+    box-sizing: border-box;
+    border: 0 !important;
+    color: #e5e7eb;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .theatre-table-wrapper .district-table tbody tr.district-row > td::before {
+    content: attr(data-label);
+    display: block !important;
+    width: 100%;
+    color: #94a3b8;
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Movie title spans both columns */
+  .theatre-table-wrapper .district-table tbody tr.district-row > td:first-child {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid #273244 !important;
+    padding: 8px 4px 14px;
+    margin-bottom: 4px !important;
+  }
+
+  .theatre-table-wrapper .district-table tbody tr.district-row > td:first-child .show-link {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .theatre-table-wrapper .district-table tbody tr.district-row > td.gross-value {
+    color: #ffffff !important;
+    font-weight: 700;
   }
 
   .theatre-shows-panel .panel-header {
@@ -1782,73 +1872,8 @@ body {
     min-width: 0;
     box-sizing: border-box;
   }
-
-  .theatre-table-wrapper {
-    width: 100%;
-    min-width: 0;
-    overflow: visible;
-  }
-
-  .theatre-table-wrapper .district-table {
-    display: block;
-    width: 100%;
-  }
-
-   .theatre-table-wrapper .district-table tbody {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 12px;
-  }
-
-  .theatre-table-wrapper .district-table thead {
-    display: none !important;
-  }
-
-  .theatre-table-wrapper .district-table tbody tr.district-row {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    width: 100%;
-    margin: 0;
-    padding: 12px;
-    box-sizing: border-box;
-    background: #111827;
-    border: 1px solid #273244;
-    border-radius: 12px;
-  }
-
- 
-
-  .theatre-table-wrapper .district-table tbody tr.district-row td::before {
-   content: attr(data-label);
-    display: block !important;
-    color: #94a3b8;
-    font-size: 11px;
-    line-height: 1.4;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-
-  .theatre-table-wrapper .district-table tbody tr.district-row td:first-child {
-    grid-column: 1 / -1;
-    border-bottom: 1px solid #273244 !important;
-    padding-bottom: 14px;
-  }
-
-  .theatre-table-wrapper .district-table tbody tr.district-row td:first-child a {
-    color: #ffffff;
-    
-  }
-
-  .theatre-table-wrapper .district-table tbody tr.district-row td.gross-value {
-    color: #ffffff;
-    font-weight: 700;
-  }
-
-  .no-shows-message {
-    padding: 12px;
-  }
 }
+
 
 
 
@@ -1885,4 +1910,76 @@ body {
 
 
   
+}
+
+
+
+
+.show-information-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .show-information-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+
+
+
+
+
+/* Show Information cards */
+
+.show-information-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+  width: 100%;
+}
+
+.show-information-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 82px;
+  padding: 14px;
+  background: #0d1421;
+  border: 1px solid #1c2637;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.show-information-card .detail-label {
+  display: block;
+  color: #748096;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.show-information-card strong {
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+  .show-information-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .show-information-card {
+    min-height: 80px;
+    padding: 12px;
+  }
 }

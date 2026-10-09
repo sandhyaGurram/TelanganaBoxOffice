@@ -188,52 +188,44 @@ const ShowDetails = () => {
               <div className="panel">
                 <h2 className="panel-title">Show Information</h2>
 
-                <div className="details-grid">
-                  <div>
+                <div className="show-information-grid">
+                  <div className="show-information-card">
                     <span className="detail-label">Movie</span>
-
-                    <strong>{show.movieTitle}</strong>
+                    <strong>{show.movieTitle || "N/A"}</strong>
                   </div>
 
-                  <div>
+                  <div className="show-information-card">
                     <span className="detail-label">Date</span>
-
-                    <strong>{show.showDate}</strong>
+                    <strong>{show.showDate || "N/A"}</strong>
                   </div>
 
-                  <div>
+                  <div className="show-information-card">
                     <span className="detail-label">Time</span>
-
-                    <strong>{show.showTime}</strong>
+                    <strong>{show.showTime || "N/A"}</strong>
                   </div>
 
-                  <div>
+                  <div className="show-information-card">
                     <span className="detail-label">Format</span>
-
                     <strong>{show.format || "N/A"}</strong>
                   </div>
 
-                  <div>
+                  <div className="show-information-card">
                     <span className="detail-label">Language</span>
-
                     <strong>{show.language || "N/A"}</strong>
                   </div>
 
-                  <div>
+                  <div className="show-information-card">
                     <span className="detail-label">Auditorium</span>
-
                     <strong>{show.auditorium || "N/A"}</strong>
                   </div>
 
-                  <div>
+                  <div className="show-information-card">
                     <span className="detail-label">Session ID</span>
-
-                    <strong>{show.sessionId}</strong>
+                    <strong>{show.sessionId || "N/A"}</strong>
                   </div>
 
-                  <div>
+                  <div className="show-information-card">
                     <span className="detail-label">Source</span>
-
                     <strong>{show.source || "N/A"}</strong>
                   </div>
                 </div>
