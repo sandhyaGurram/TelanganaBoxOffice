@@ -194,7 +194,7 @@ const TheatreDetails = () => {
                     </div>
                   </div>
 
-                  <div className="table-wrapper">
+                  <div className="table-wrapper theatre-table-wrapper">
                     <table className="district-table">
                       <thead>
                         <tr>
@@ -219,38 +219,43 @@ const TheatreDetails = () => {
                             }
                             className="district-row"
                           >
-                            <td>
+                            <td data-label="Movie">
                               <Link
-                                to={`/shows/${encodeURIComponent(
-                                  session.sessionId,
-                                )}`}
+                                to={`/shows/${encodeURIComponent(session.sessionId)}`}
                                 className="show-link"
                               >
-                                {session.movieTitle}
+                                {session.movieTitle || "Unknown Movie"}
                               </Link>
                             </td>
 
-                            <td>{session.showDate}</td>
-
-                            <td>{session.showTime}</td>
-
-                            <td>{session.format}</td>
-
-                            <td>{formatNumber(session.totalSeats)}</td>
-
-                            <td>{formatNumber(session.sold)}</td>
-
-                            <td>{formatNumber(session.available)}</td>
-
-                            <td>{session.occupancy}%</td>
-
-                            <td className="gross-value">
+                            <td data-label="Date">{session.showDate || "—"}</td>
+                            <td data-label="Time">{session.showTime || "—"}</td>
+                            <td data-label="Format">{session.format || "—"}</td>
+                            <td data-label="Total Seats">
+                              {formatNumber(session.totalSeats)}
+                            </td>
+                            <td data-label="Tickets Sold">
+                              {formatNumber(session.sold)}
+                            </td>
+                            <td data-label="Available Seats">
+                              {formatNumber(session.available)}
+                            </td>
+                            <td data-label="Occupancy">
+                              {Number(session.occupancy || 0).toFixed(2)}%
+                            </td>
+                            <td data-label="Gross" className="gross-value">
                               {formatCurrency(session.gross)}
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
+
+                    {filteredSessions.length === 0 && (
+                      <p className="panel-description no-shows-message">
+                        No shows found for the selected filters.
+                      </p>
+                    )}
                   </div>
                 </div>
               </>

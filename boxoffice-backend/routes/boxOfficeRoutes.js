@@ -656,6 +656,67 @@ router.get("/districts", async (req, res) => {
 
 
 
+router.get("/districts/locations", async (req, res) => {
+    try {
+        const locations = await BoxOfficeSession.aggregate([
+            {
+                $match: {
+                    state: "Telangana",
+                    district: {
+                        $type: "string",
+                        $regex: "\\S",
+                    },
+                    city: {
+                        $type: "string",
+                        $regex: "\\S",
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        district: "$district",
+                        city: "$city",
+                    },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    district: "$_id.district",
+                    city: "$_id.city",
+                },
+            },
+            {
+                $sort: {
+                    district: 1,
+                    city: 1,
+                },
+            },
+        ]);
+
+        const districts = [
+            ...new Set(locations.map((item) => item.district)),
+        ].sort();
+
+        res.json({
+            success: true,
+            districts,
+            cities: locations,
+        });
+    } catch (error) {
+        console.error("District locations error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+
+
+
 
 router.get("/districts/:district", async (req, res) => {
     try {
