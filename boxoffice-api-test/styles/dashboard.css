@@ -1789,64 +1789,55 @@ body {
     overflow: visible;
   }
 
-  .theatre-table-wrapper .district-table,
-  .theatre-table-wrapper .district-table tbody {
+  .theatre-table-wrapper .district-table {
     display: block;
     width: 100%;
   }
 
+   .theatre-table-wrapper .district-table tbody {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
   .theatre-table-wrapper .district-table thead {
-    display: none;
+    display: none !important;
   }
 
   .theatre-table-wrapper .district-table tbody tr.district-row {
-    display: grid;
+    display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
     width: 100%;
-    box-sizing: border-box;
-    margin: 0 0 12px;
+    margin: 0;
     padding: 12px;
+    box-sizing: border-box;
     background: #111827;
     border: 1px solid #273244;
     border-radius: 12px;
   }
 
-  .theatre-table-wrapper .district-table tbody tr.district-row td {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 6px;
-    min-width: 0;
-    padding: 10px 4px;
-    border: 0;
-    color: #e5e7eb;
-    font-size: 13px;
-    overflow-wrap: anywhere;
-    box-sizing: border-box;
-  }
+ 
 
   .theatre-table-wrapper .district-table tbody tr.district-row td::before {
-    content: attr(data-label);
-    display: block;
+   content: attr(data-label);
+    display: block !important;
     color: #94a3b8;
     font-size: 11px;
+    line-height: 1.4;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
   }
 
   .theatre-table-wrapper .district-table tbody tr.district-row td:first-child {
     grid-column: 1 / -1;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #273244;
+    border-bottom: 1px solid #273244 !important;
+    padding-bottom: 14px;
   }
 
   .theatre-table-wrapper .district-table tbody tr.district-row td:first-child a {
     color: #ffffff;
-    font-weight: 600;
-    line-height: 1.5;
+    
   }
 
   .theatre-table-wrapper .district-table tbody tr.district-row td.gross-value {
@@ -1880,27 +1871,18 @@ body {
     display: flex !important;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-start;
     gap: 6px;
     min-width: 0;
-    padding: 10px 4px;
-    border: 0;
-    box-sizing: border-box;
+    padding: 12px 4px;
+    border: 0 !important;
     color: #e5e7eb;
+    white-space: normal;
     overflow-wrap: anywhere;
+    box-sizing: border-box;
   }
 
-  .theatre-table-wrapper .district-table tbody tr.district-row td::before {
-    content: attr(data-label);
-    display: block !important;
-    color: #94a3b8;
-    font-size: 11px;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
 
-  .theatre-table-wrapper .district-table tbody tr.district-row td:first-child {
-    grid-column: 1 / -1;
-    border-bottom: 1px solid #273244;
-    padding-bottom: 12px;
-  }
+
+  
 }
