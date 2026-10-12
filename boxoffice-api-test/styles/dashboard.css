@@ -41,7 +41,7 @@ body {
 
   background: #0b101c;
   border-right: 1px solid #1c2433;
-
+display: none;
   z-index: 100;
 }
 
@@ -1982,4 +1982,31 @@ body {
     min-height: 80px;
     padding: 12px;
   }
+}
+
+
+
+
+/* Remove empty sidebar space */
+.dashboard-layout {
+  display: block !important;
+  width: 100% !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.dashboard-main,
+.main-content,
+.dashboard-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+}
+
+/* Prevent the page from being shifted right */
+body,
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }

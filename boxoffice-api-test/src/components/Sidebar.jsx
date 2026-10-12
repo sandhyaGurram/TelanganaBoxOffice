@@ -9,8 +9,8 @@ import {
 
 const Sidebar = () => {
   return (
-    <aside className="sidebar">
-      <div className="sidebar-brand">
+    <aside>
+      {/* <div className="sidebar-brand">
         <h1 className="sidebar-title">Telangana Box Office</h1>
 
         <p className="sidebar-subtitle">Analytics Dashboard</p>
@@ -46,7 +46,7 @@ const Sidebar = () => {
           <Settings size={18} />
           <span>Settings</span>
         </a>
-      </nav>
+      </nav> */}
     </aside>
   );
 };
